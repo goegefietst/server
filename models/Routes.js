@@ -4,6 +4,7 @@
   var Schema = mongoose.Schema;
 
   var RouteSchema = new Schema({
+    userId: String,
     points: [{
       accuracy: Number,
       altitude: Number,
