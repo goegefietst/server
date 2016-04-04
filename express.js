@@ -31,25 +31,43 @@
   mongoose.connect('mongodb://admin:admin@localhost:27017/test' +
     '?authSource=test');
 
-  router.route('/user/:uuid')
-    .post(function(req, res) {
+  router.route('/user/:uuid').post(function(req, res) {
+    var params = {};
+    params.res = res;
+    params.req = req;
+    params.uuid = req.params.uuid;
+    checkUserInfo(params.uuid, req.body.secret, params, saveRoute, notFound);
+  });
+
+  router.route('/user').post(function(req, res) {
+    if (req.body.uuid) {
+      //TODO
+    } else {
       var params = {};
       params.res = res;
-      params.req = req;
-      params.uuid = req.params.uuid;
-      checkUserInfo(req.params.uuid, req.body.secret, params, saveRoute, notFound);
-    });
+      generateUser(params);
+    }
+  });
 
-  router.route('/user')
-    .post(function(req, res) {
-      if (req.body.uuid) {
-        //TODO
-      } else {
-        var params = {};
-        params.res = res;
-        generateUser(params);
-      }
-    });
+  router.route('/user/:uuid.json').get(function(req, res) {
+    var params = {};
+    params.res = res;
+    params.req = req;
+    params.uuid = req.params.uuid;
+    params.secret = req.header('secret');
+    checkUserInfo(params.uuid, params.secret, params, getRoutes, notFound);
+  });
+
+  router.route('/user/:uuid').get(function(req, res) {
+    res.status(303).redirect('/user/' + req.params.uuid + '.json');
+  });
+
+  router.route('/routes').get(function(req, res) {
+    var params = {};
+    params.res = res;
+    params.req = req;
+    getRoutes(params);
+  });
 
   app.use('/', router);
 
@@ -95,6 +113,35 @@
         message: 'Route saved for ' + route.uuid
       });
     });
+  }
+
+  function getRoutes(params) {
+    if (params.uuid) {
+      Route.find({
+        'uuid': params.uuid
+      }).select({
+        points: 1,
+        _id: 0
+      }).exec(results);
+    } else {
+      Route.find({}).select({
+        points: 1,
+        _id: 0
+      }).exec(results);
+    }
+
+    function results(err, docs) {
+      if (err) {
+        console.log(err);
+      }
+      if (docs.length) {
+        params.res.status(200).json(docs);
+      } else {
+        params.res.status(404).send({
+          message: 'Not found'
+        });
+      }
+    }
   }
 
   function generateUUID() {

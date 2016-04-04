@@ -3,17 +3,21 @@
   var mongoose = require('mongoose');
   var Schema = mongoose.Schema;
 
-  var RouteSchema = new Schema({
+  var PointSchema = Schema({
+    accuracy: Number,
+    altitude: Number,
+    bearing: Number,
+    speed: Number,
+    time: Number,
+    latitude: Number,
+    longitude: Number
+  }, {
+    _id: false
+  });
+
+  var RouteSchema = Schema({
     uuid: String,
-    points: [{
-      accuracy: Number,
-      altitude: Number,
-      bearing: Number,
-      speed: Number,
-      time: Number,
-      latitude: Number,
-      longitude: Number
-    }]
+    points: [PointSchema]
   });
 
   module.exports = mongoose.model('Route', RouteSchema);
