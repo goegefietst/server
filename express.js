@@ -4,6 +4,7 @@
   var mongoose = require('mongoose');
   var bodyParser = require('body-parser');
   var logger = require('morgan');
+  var crypto = require('crypto');
 
   var Route = require('./models/Routes');
   var User = require('./models/Users');
@@ -18,30 +19,30 @@
   var router = express.Router();
 
   router.use(function(req, res, next) {
-    console.log('PING PING');
     next();
   });
 
+  app.use(express.static(__dirname + '/public'));
+
   router.get('/', function(req, res) {
-    res.json({
-      message: 'Test message'
-    });
+    res.sendFile(__dirname + '/public/index.html');
   });
 
   mongoose.connect('mongodb://admin:admin@localhost:27017/test' +
     '?authSource=test');
 
-  router.route('/data')
+  router.route('/user/:uuid')
     .post(function(req, res) {
       var params = {};
       params.res = res;
       params.req = req;
-      userExists(req.body.userId, params, saveRoute, error);
+      params.uuid = req.params.uuid;
+      checkUserInfo(req.params.uuid, req.body.secret, params, saveRoute, notFound);
     });
 
   router.route('/user')
     .post(function(req, res) {
-      if (req.body.userId) {
+      if (req.body.uuid) {
         //TODO
       } else {
         var params = {};
@@ -50,31 +51,33 @@
       }
     });
 
-  app.use('/api', router);
+  app.use('/', router);
 
   app.listen(3000, function() {
     console.log('Express server listening on port 3000');
   });
 
-  function error(params) {
-    params.res.json({
-      message: 'Something went wrong...'
+  function notFound(params) {
+    params.res.status(404).send({
+      message: 'Not found'
     });
   }
 
   function generateUser(params) {
     var user = new User();
-    user.guid = generateUUID();
-    userExists(user.guid, params, generateUser, save);
+    user.uuid = generateUUID();
+    user.secret = generateSecret();
+    userExists(user.uuid, params, generateUser, save);
 
     function save(params) {
       user.save(function(err) {
         if (err) {
           params.res.send(err);
         }
-        params.res.json({
-          message: 'UserId generated!',
-          userId: user.guid
+        params.res.status(201).json({
+          message: 'User generated!',
+          uuid: user.uuid,
+          secret: user.secret
         });
       });
     }
@@ -82,14 +85,14 @@
 
   function saveRoute(params) {
     var route = new Route();
-    route.userId = params.req.body.userId;
+    route.uuid = params.uuid;
     route.points = params.req.body.points;
     route.save(function(err) {
       if (err) {
         params.res.send(err);
       }
-      params.res.json({
-        message: 'Route saved for ' + route.userId
+      params.res.status(201).json({
+        message: 'Route saved for ' + route.uuid
       });
     });
   }
@@ -104,9 +107,31 @@
     return uuid;
   }
 
-  function userExists(guid, params, yes, no) {
+  function generateSecret() {
+    return crypto.randomBytes(64).toString('hex');
+  }
+
+  function userExists(uuid, params, yes, no) {
     User.find({
-      'guid': guid
+      'uuid': uuid
+    }, check);
+
+    function check(err, docs) {
+      if (err) {
+        console.log(err);
+      }
+      if (docs.length) {
+        yes(params);
+      } else {
+        no(params);
+      }
+    }
+  }
+
+  function checkUserInfo(uuid, secret, params, yes, no) {
+    User.find({
+      'uuid': uuid,
+      'secret': secret
     }, check);
 
     function check(err, docs) {

@@ -86,12 +86,7 @@
 
     // Custom Globals
     "globals"       : {
-      "angular" : false,
-      "cordova" : false,
-      "StatusBar" : false,
-      "require" : false,
-      "L" : false,
-      "backgroundGeoLocation" : false,
-      "db" : false
+      "__dirname" : false,
+      "require" : false
       }        // additional predefined global variables
 }
