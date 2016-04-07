@@ -1,13 +1,29 @@
 (function() {
   'use strict';
   var express = require('express');
+  var program = require('commander');
+  var path = require('path');
   var mongoose = require('mongoose');
   var bodyParser = require('body-parser');
   var logger = require('morgan');
   var crypto = require('crypto');
+  var fs = require('fs');
 
   var Route = require('./models/Routes');
   var User = require('./models/Users');
+
+  program
+    .option('-c --config [config]', 'specify config file')
+    .parse(process.argv);
+
+  var configFile = program.config || path.join(__dirname, './config-example.json');
+  var config = JSON.parse(fs.readFileSync(configFile, {
+    encoding: 'utf8'
+  }));
+
+  var port = config.port;
+  var login = config.source.login ?
+    config.source.login + ':' + config.source.password + '@' : '';
 
   var app = express();
   app.use(bodyParser.json());
@@ -28,8 +44,8 @@
     res.sendFile(__dirname + '/public/index.html');
   });
 
-  mongoose.connect('mongodb://admin:admin@localhost:27017/test' +
-    '?authSource=test');
+  mongoose.connect(config.source.type + '://' + login + config.source.host +
+    ':' + config.source.port + '/' + config.source.db);
 
   router.route('/user/:uuid').post(function(req, res) {
     var params = {};
@@ -71,8 +87,8 @@
 
   app.use('/', router);
 
-  app.listen(3000, function() {
-    console.log('Express server listening on port 3000');
+  app.listen(port, function() {
+    console.log('Express server listening on port ' + port);
   });
 
   function notFound(params) {

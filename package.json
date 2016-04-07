@@ -14,10 +14,13 @@
   },
   "dependencies": {
     "body-parser": "1.9.2",
+    "commander": "^2.9.0",
     "crypto": "0.0.3",
     "express": "4.10.1",
+    "fs": "0.0.2",
     "mongoskin": "1.4.4",
-    "morgan": "1.5.0"
+    "morgan": "1.5.0",
+    "path": "^0.12.7"
   },
   "devDependencies": {
     "expect.js": "0.3.1",

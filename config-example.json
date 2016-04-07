@@ -1,0 +1,15 @@
+{
+  "source" : {
+    "type" : "mongodb",
+    "host" : "localhost",
+    "port" : 27017,
+    "db" : "test",
+    "collections" : {
+      "routes" : "routes",
+      "users" : "users"
+    },
+    "login" : "admin",
+    "password" : "admin"
+  },
+  "port" : 3000
+}
