@@ -1,45 +1,65 @@
 var User = require('../models/Users');
 var crypto = require('crypto');
+var q = require('q');
 
 var UserController = function() {};
 
-UserController.generateUser = function(params) {
+UserController.generateUser = function(prevCount) {
+  var count = 0;
   var user = new User();
+  if (prevCount) {
+    count = prevCount;
+  }
   user.uuid = generateUUID();
   user.secret = generateSecret();
-  userExists(user.uuid, params, UserController.generateUser, save);
+  return isNewUser(user).then(saveUser).catch(tryAgain);
 
-  function save(params) {
-    user.save(function(err) {
-      if (err) {
-        params.res.send(err);
-      }
-      params.res.status(201).json({
-        message: 'User generated!',
-        uuid: user.uuid,
-        secret: user.secret
-      });
-    });
+  function saveUser(user) {
+    return user.save();
+  }
+
+  function tryAgain() {
+    if (++count > 4) {
+      console.log('Tried and failed to generate a user five times');
+      return;
+    }
+    UserController.generateUser(count);
   }
 };
 
-UserController.checkUserInfo = function(uuid, secret, params, yes, no) {
-  User.find({
+UserController.checkUserInfo = function(uuid, secret) {
+  var promise = User.find({
     'uuid': uuid,
     'secret': secret
-  }, check);
+  }).exec();
+  return promise.then(check);
 
-  function check(err, docs) {
-    if (err) {
-      console.log(err);
-    }
+  function check(docs) {
+    var deferred = q.defer();
     if (docs.length) {
-      yes(params);
+      deferred.resolve(uuid);
     } else {
-      no(params);
+      deferred.reject('Unauthorized');
     }
+    return deferred.promise;
   }
 };
+
+function isNewUser(user) {
+  return User.find({
+    'uuid': user.uuid
+  }).exec().then(check);
+
+  function check(docs) {
+    var deferred = q.defer();
+    if (!docs.length) {
+      deferred.resolve(user);
+    } else {
+      deferred.resolve(false);
+    }
+    return deferred.promise;
+  }
+}
 
 function generateUUID() {
   var d = new Date().getTime();
@@ -53,23 +73,6 @@ function generateUUID() {
 
 function generateSecret() {
   return crypto.randomBytes(64).toString('hex');
-}
-
-function userExists(uuid, params, yes, no) {
-  User.find({
-    'uuid': uuid
-  }, check);
-
-  function check(err, docs) {
-    if (err) {
-      console.log(err);
-    }
-    if (docs.length) {
-      yes(params);
-    } else {
-      no(params);
-    }
-  }
 }
 
 module.exports = UserController;

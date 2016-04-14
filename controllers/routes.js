@@ -2,53 +2,27 @@ var Route = require('../models/Routes');
 
 var RouteController = function() {};
 
-RouteController.saveRoute = function(params) {
+RouteController.saveRoute = function(values) {
   var route = new Route();
-  route.uuid = params.uuid;
-  route.points = params.req.body.points;
-  route.save(function(err) {
-    if (err) {
-      params.res.send(err);
-    }
-    params.res.status(201).json({
-      message: 'Route saved for ' + route.uuid
-    });
-  });
+  route.uuid = values.uuid;
+  route.points = values.points;
+  return route.save();
 };
 
-RouteController.getRoutes = function(params) {
-  if (params.uuid) {
-    Route.find({
-      'uuid': params.uuid
+RouteController.getRoutes = function(uuid) {
+  if (uuid) {
+    return Route.find({
+      'uuid': uuid
     }).select({
       points: 1,
       _id: 0
-    }).exec(results);
+    }).exec();
   } else {
-    Route.find({}).select({
+    return Route.find({}).select({
       points: 1,
       _id: 0
-    }).exec(results);
+    }).exec();
   }
-
-  function results(err, docs) {
-    if (err) {
-      console.log(err);
-    }
-    if (docs.length) {
-      params.res.status(200).json(docs);
-    } else {
-      params.res.status(404).send({
-        message: 'Not found'
-      });
-    }
-  }
-};
-
-RouteController.notFound = function(params) {
-  params.res.status(404).send({
-    message: 'Not found'
-  });
 };
 
 module.exports = RouteController;

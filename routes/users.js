@@ -6,9 +6,22 @@ module.exports = function(router) {
     if (req.body.uuid) {
       //TODO
     } else {
-      var params = {};
-      params.res = res;
-      UserController.generateUser(params);
+      console.log('Trying to generate user');
+      UserController.generateUser().then(respond).catch(error);
+    }
+
+    function respond(user) {
+      return res.status(201).json({
+        message: 'User generated!',
+        uuid: user.uuid,
+        secret: user.secret
+      });
+    }
+
+    function error() {
+      res.status(500).send({
+        message: 'Failed to create a new user.'
+      });
     }
   });
 };
