@@ -43,6 +43,10 @@ router.get('/', function(req, res) {
   res.sendFile(__dirname + '/public/index.html');
 });
 
+router.get('/policy', function(req, res) {
+  res.sendFile(__dirname + '/public/policy.html');
+});
+
 mongoose.connect(config.source.type + '://' + login + config.source.host +
   ':' + config.source.port + '/' + config.source.db);
 

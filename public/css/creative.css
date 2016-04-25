@@ -55,6 +55,15 @@ p {
     background-color: #f05f40;
 }
 
+.bg-policy {
+    color: #fff;
+    background-color: #107896;
+}
+
+.bg-policy p {
+  
+}
+
 .bg-dark {
     color: #fff;
     background-color: #222;
