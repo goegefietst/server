@@ -1,0 +1,19 @@
+{
+    "categories": [{
+        "name": "School"
+    }, {
+        "name": "Faculty"
+    }, {
+        "name": "Association"
+    }],
+    "teams": [{
+        "name": "HoGent",
+        "category": "School"
+    }, {
+        "name": "Toegepaste Informatica",
+        "category": "Faculty"
+    }, {
+        "name": "Bacchus",
+        "category": "Association"
+    }]
+}

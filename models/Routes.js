@@ -15,7 +15,10 @@ var PointSchema = new Schema({
 
 var RouteSchema = new Schema({
   uuid: String,
-  points: [PointSchema]
+  points: [PointSchema],
+  distance: Number,
+  time: Number,
+  teams: [{name: String, category: String}]
 });
 
 module.exports = mongoose.model('Route', RouteSchema);
