@@ -1,24 +1,29 @@
 var Route = require('../models/Routes');
-var UserController = require('./users.js');
-var q = require('q');
 
 var RouteController = function() {};
 
+// Make sure to check if uuid and secret are correct and teams are filled in correctly
 RouteController.saveRoute = function(values) {
-  return UserController.checkUserInfo(values.uuid, values.secret)
-    .then(function(users) {
-      if (users.length === 1) {
-        var route = new Route();
-        route.uuid = values.uuid;
-        route.points = values.points;
-        route.distance = values.distance;
-        route.time = values.time;
-        route.teams = users[0].teams;
-        return route.save();
-      } else {
-        return q.reject('Could not find given user');
-      }
-    });
+  var route = new Route();
+  route.uuid = values.uuid;
+  route.points = values.points;
+  route.distance = values.distance;
+  route.time = values.time;
+  route.teams = values.teams;
+  return route.save();
+};
+
+// Make sure to check if uuid and secret are correct and teams are filled in correctly
+RouteController.updateRoutes = function(uuid, teams) {
+  return Route.update({
+    'uuid': uuid
+  }, {
+    $set: {
+      'teams': teams
+    }
+  }, {
+    multi: true
+  });
 };
 
 RouteController.getRoutes = function(uuid) {

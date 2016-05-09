@@ -1,32 +1,18 @@
 var Team = require('../models/Teams');
-var CategoryController = require('./categories.js');
 var Q = require('q');
 
 var TeamController = function() {};
 
+// Make sure to check if category exists first
 TeamController.saveTeam = function(values) {
   if (values && values.category && values.name) {
-    var categoryExists = CategoryController.getCategory(values.category)
-      .then(function(categories) {
-        if (categories.length === 1) {
-          return Q.resolve(values.category);
-        } else {
-          return Q.reject('Could not find given category');
-        }
-      });
-    var isNewTeam = TeamController.getTeam(values.name)
-      .then(function(teams) {
-        if (teams.length === 0) {
-          return Q.resolve(values.name);
-        } else {
-          return Q.reject('A team with that name exists already');
-        }
-      });
-    return Q.all([categoryExists, isNewTeam]).then(function(values) {
+    return TeamController.getTeam(values.name).then(function() {
+      return Q.reject('A team with that name exists already');
+    }).catch(function() {
       var team = new Team();
-      team.category = values[0];
-      team.name = values[1];
-      team.save();
+      team.category = values.category;
+      team.name = values.name;
+      return team.save();
     });
   } else {
     return Q.reject('Did not enter category or name');
@@ -38,25 +24,75 @@ TeamController.getTeams = function() {
     name: 1,
     category: 1,
     _id: 0
-  }).populate('category').exec();
+  }).exec().then(function(teams) {
+    if (teams.length > 0) {
+      return Q.resolve(teams);
+    } else {
+      return Q.reject('Could not find any teams');
+    }
+  });
 };
 
 TeamController.getTeamsByCategory = function(category) {
+  if (!category) {
+    return Q.reject('Did not give category');
+  }
   return Team.find({}).select({
     name: 1,
     category: 1,
     _id: 0
-  }).populate('category').exec().then(function(docs) {
+  }).exec().then(function(docs) {
     return docs.filter(function(doc) {
       return doc.category.name === category;
     });
+  }).then(function(teams) {
+    if (teams.length > 0) {
+      return Q.resolve(teams);
+    } else {
+      return Q.reject('Could not find teams with that category');
+    }
   });
 };
 
-TeamController.getTeam = function(name) {
-  return Team.find({
+TeamController.getTeam = function(name, category) {
+  if (!name) {
+    return Q.reject('Did not give name');
+  }
+  var fields = {
     name: name
-  }).limit(1).exec();
+  };
+  if (category) {
+    fields.category = category;
+  }
+  return Team.find(fields).select({
+    name: 1,
+    category: 1,
+    _id: 0
+  }).limit(1).exec().then(function(teams) {
+    if (teams.length > 0) {
+      return Q.resolve(teams[0]);
+    } else {
+      return category ?
+        Q.reject('Could not find team with that name and category') :
+        Q.reject('Could not find team with that name');
+    }
+  });
+};
+
+TeamController.filterExistingTeams = function(teams) {
+  return Q.allSettled(teams.map(teamExists)).then(function(array) {
+    return array.filter(function(promise) {
+      return promise.state === 'fulfilled';
+    });
+  }).then(function(promises) {
+    return promises.map(function(promise) {
+      return promise.value;
+    });
+  });
+
+  function teamExists(team) {
+    return TeamController.getTeam(team.name);
+  }
 };
 
 module.exports = TeamController;

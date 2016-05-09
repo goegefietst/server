@@ -1,7 +1,6 @@
 var User = require('../models/Users');
 var crypto = require('crypto');
 var Q = require('q');
-var TeamController = require('./teams.js');
 
 var UserController = function() {};
 
@@ -46,35 +45,16 @@ UserController.checkUserInfo = function(uuid, secret) {
   }
 };
 
+// Make sure to check if teams exist and fill them in first and to update routes as well
 UserController.updateUserInfo = function(uuid, secret, teams) {
-  return Q.allSettled(teams.map(teamExists)).then(function(array) {
-    //console.log(array);
-    return array.filter(function(promise) {
-      //console.log(promise);
-      return promise.state === 'fulfilled';
-    });
-  }).then(function(promises) {
-    //console.log(promises); // []
-    var teams = promises.map(function(promise) {
-      return promise.value;
-    });
-    return User.update({
-      'uuid': uuid,
-      'secret': secret
-    }, {
+  return User.update({
+    'uuid': uuid,
+    'secret': secret
+  }, {
+    $set: {
       'teams': teams
-    }).exec();
-  });
-
-  function teamExists(team) {
-    return TeamController.getTeam(team.name).then(function(teams) {
-      if (teams.length === 1) {
-        return Q.resolve(team);
-      } else {
-        return Q.reject('There is no team with that name');
-      }
-    });
-  }
+    }
+  }).exec();
 };
 
 function isNewUser(user) {

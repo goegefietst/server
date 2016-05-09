@@ -1,6 +1,5 @@
 var RouteController = require('../controllers/routes.js');
 var UserController = require('../controllers/users.js');
-var q = require('q');
 
 module.exports = function(router) {
   router.route('/routes').get(function(req, res) {
@@ -28,22 +27,16 @@ module.exports = function(router) {
   });
 
   router.route('/route/:uuid').post(function(req, res) {
-    var uuid = req.params.uuid;
-    var secret = req.header('secret');
-    UserController.checkUserInfo(uuid, secret)
-      .then(insertRoute)
-      .then(RouteController.saveRoute)
+    var values = {
+      uuid: req.params.uuid,
+      secret: req.header('secret'),
+      points: req.body.points,
+      distance: req.body.distance,
+      time: req.body.time
+    };
+    RouteController.saveRoute(values)
       .then(respond)
       .catch(error);
-
-    function insertRoute() {
-      var deferred = q.defer();
-      deferred.resolve({
-        uuid: uuid,
-        points: req.body.points
-      });
-      return deferred.promise;
-    }
 
     function respond(route) {
       res.status(201).json({
