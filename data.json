@@ -10,10 +10,58 @@
         "name": "HoGent",
         "category": "School"
     }, {
-        "name": "Toegepaste Informatica",
+        "name": "UGent",
+        "category": "School"
+    }, {
+        "name": "Artevelde",
+        "category": "School"
+    }, {
+        "name": "Odisee",
+        "category": "School"
+    }, {
+        "name": "LUCA",
+        "category": "School"
+    }, {
+        "name": "Bedrijf en organisatie",
+        "category": "Faculty"
+    }, {
+        "name": "Bio-ingenieurswetenschappen",
+        "category": "Faculty"
+    }, {
+        "name": "Geologie",
+        "category": "Faculty"
+    }, {
+        "name": "Ingenieurswetenschappen en Architectuur",
+        "category": "Faculty"
+    }, {
+        "name": "Letteren en Wijsbegeerte",
+        "category": "Faculty"
+    }, {
+        "name": "Economie en Bedrijfskunde",
         "category": "Faculty"
     }, {
         "name": "Bacchus",
+        "category": "Association"
+    }, {
+        "name": "Bacchus",
+        "category": "Association"
+    }, {
+        "name": "VLK",
+        "category": "Association"
+    }, {
+        "name": "VTK",
+        "category": "Association"
+    }, {
+        "name": "VDK",
+        "category": "Association"
+    }, {
+        "name": "VGK",
+        "category": "Association"
+    }, {
+        "name": "WiNa",
+        "category": "Association"
+    }, {
+        "name": "Chemica",
         "category": "Association"
     }]
 }
