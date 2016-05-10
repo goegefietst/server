@@ -95,4 +95,18 @@ TeamController.filterExistingTeams = function(teams) {
   }
 };
 
+TeamController.getDistances = function(aggregate) {
+  return Team.find().then(function(teams) {
+    return Q.allSettled(teams.map(aggregate)).then(function(array) {
+      return array.filter(function(promise) {
+        return promise.state === 'fulfilled';
+      });
+    }).then(function(promises) {
+      return promises.map(function(promise) {
+        return promise.value;
+      });
+    });
+  });
+};
+
 module.exports = TeamController;

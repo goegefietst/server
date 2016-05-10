@@ -40,6 +40,7 @@ router.use(function(req, res, next) {
 
 require('./routes/routes.js')(router);
 require('./routes/users.js')(router);
+require('./routes/teams.js')(router);
 
 app.use(express.static(__dirname + '/public'));
 

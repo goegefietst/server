@@ -42,4 +42,43 @@ RouteController.getRoutes = function(uuid) {
   }
 };
 
+RouteController.aggregate = function aggregate(doc) {
+  return Route.aggregate([{
+    $match: {
+      teams: {
+        $elemMatch: {
+          name: doc.name
+        }
+      }
+    }
+  }, {
+    $group: {
+      _id: '',
+      distance: {
+        $sum: '$distance'
+      }
+    }
+  }, {
+    $project: {
+      _id: 0,
+      distance: '$distance'
+    }
+  }], function(err, res) {
+    return res;
+  }).then(function(res) {
+    var values = {
+      distance: 0
+    };
+    if (res && res[0]) {
+      values = res[0];
+    }
+    var result = {
+      name: doc.name,
+      category: doc.category,
+      values: values
+    };
+    return result;
+  });
+};
+
 module.exports = RouteController;
