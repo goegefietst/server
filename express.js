@@ -6,10 +6,6 @@ var bodyParser = require('body-parser');
 var logger = require('morgan');
 var fs = require('fs');
 mongoose.Promise = require('q').Promise;
-var Q = require('q');
-
-var CategoryController = require('./controllers/categories.js');
-var TeamController = require('./controllers/teams.js');
 
 program
   .option('-c --config [config]', 'specify config file')
@@ -57,35 +53,7 @@ mongoose.connect(config.source.type + '://' + login + config.source.host +
 
 app.use('/', router);
 
-var data = JSON.parse(fs.readFileSync(path.join(__dirname, './data.json'), {
-  encoding: 'utf8'
-}));
-
-function insertCategories() {
-  return data.categories.map(function(category) {
-    return CategoryController.getCategory(category.name).then(function(result) {
-      if (result.length === 0) {
-        return CategoryController.saveCategory(category.name);
-      } else {
-        return Q.reject();
-      }
-    });
-  });
-}
-
-function insertTeams() {
-  return data.teams.map(function(team) {
-    return TeamController.getTeam(team.name).then(function(result) {
-      if (result.length === 0) {
-        return TeamController.saveTeam(team);
-      } else {
-        return Q.reject();
-      }
-    });
-  });
-}
-
-Q.all(insertCategories()).then(insertTeams);
+require('./data.js')();
 
 app.listen(port, function() {
   console.log('Express server listening on port ' + port);
