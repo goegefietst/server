@@ -2,7 +2,7 @@ var RouteController = require('../controllers/routes.js');
 var UserController = require('../controllers/users.js');
 
 module.exports = function(router) {
-  router.route('/routes').get(function(req, res) {
+  /*router.route('/routes').get(function(req, res) {
     RouteController.getRoutes().then(respond).catch(error);
 
     function respond(docs) {
@@ -24,7 +24,7 @@ module.exports = function(router) {
         });
       }
     }
-  });
+  });*/
 
   router.route('/route/:uuid').post(function(req, res) {
     var values = {
