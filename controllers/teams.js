@@ -3,16 +3,14 @@ var Q = require('q');
 
 var TeamController = function() {};
 
-// Make sure to check if category exists first
-TeamController.saveTeam = function(values) {
-  if (values && values.category && values.name) {
-    return TeamController.getTeam(values.name).then(function() {
-      return Q.reject('A team with that name exists already');
-    }).catch(function() {
-      var team = new Team();
-      team.category = values.category;
-      team.name = values.name;
-      return team.save();
+// Make sure to check if category exists before calling this function
+TeamController.saveTeam = function(team) {
+  if (team && team.category && team.name) {
+    return TeamController.getTeam(team.name).catch(function() {
+      var t = new Team();
+      t.category = team.category;
+      t.name = team.name;
+      return t.save();
     });
   } else {
     return Q.reject('Did not enter category or name');
