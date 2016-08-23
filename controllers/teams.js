@@ -1,7 +1,8 @@
 var Team = require('../models/Teams');
 var Q = require('q');
 
-var TeamController = function() {};
+var TeamController = function() {
+};
 
 // Make sure to check if category exists before calling this function
 TeamController.saveTeam = function(team) {
@@ -94,16 +95,17 @@ TeamController.filterExistingTeams = function(teams) {
 };
 
 TeamController.getDistances = function(aggregate) {
-  return Team.find().then(function(teams) {
-    return Q.allSettled(teams.map(aggregate)).then(function(array) {
-      return array.filter(function(promise) {
-        return promise.state === 'fulfilled';
+  return Team.find({}).then(function(teams) {
+    return Q.allSettled(teams.map(aggregate))
+      .then(function(array) {
+        return array.filter(function(promise) {
+          return promise.state === 'fulfilled';
+        });
+      }).then(function(promises) {
+        return promises.map(function(promise) {
+          return promise.value;
+        });
       });
-    }).then(function(promises) {
-      return promises.map(function(promise) {
-        return promise.value;
-      });
-    });
   });
 };
 

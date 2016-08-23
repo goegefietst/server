@@ -1,4 +1,5 @@
 var Route = require('../models/Routes');
+var Q = require('q');
 
 var RouteController = function() {};
 
@@ -42,12 +43,13 @@ RouteController.getRoutes = function(uuid) {
   }
 };
 
-RouteController.aggregate = function aggregate(doc) {
-  return Route.aggregate([{
+RouteController.aggregate = function aggregate(team) {
+  var deferred = Q.defer();
+  Route.aggregate([{
     $match: {
       teams: {
         $elemMatch: {
-          name: doc.name
+          name: team.name
         }
       }
     }
@@ -64,8 +66,6 @@ RouteController.aggregate = function aggregate(doc) {
       distance: '$distance'
     }
   }], function(err, res) {
-    return res;
-  }).then(function(res) {
     var values = {
       distance: 0
     };
@@ -73,12 +73,13 @@ RouteController.aggregate = function aggregate(doc) {
       values = res[0];
     }
     var result = {
-      name: doc.name,
-      category: doc.category,
+      name: team.name,
+      category: team.category,
       values: values
     };
-    return result;
+    deferred.resolve(result);
   });
+  return deferred.promise;
 };
 
 module.exports = RouteController;
