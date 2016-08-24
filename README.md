@@ -12,6 +12,7 @@ Runs with the default configuration config-example.json, you can run with your o
     $ node express.js --config yourConfig.json
 
 The MongoDB login defaults to admin:admin, replace the login by null if no account is required.
+Interval configuration is amount of minutes before server recalculates cache.
 
 ### Version
 0.0.1 in development

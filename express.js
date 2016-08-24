@@ -12,14 +12,14 @@ program
   .parse(process.argv);
 
 var configFile = program.config ||
-  path.join(__dirname, './config-example.json');
+  path.join(__dirname, './config.json');
 var config = JSON.parse(fs.readFileSync(configFile, {
   encoding: 'utf8'
 }));
 
 var port = config.port;
 var login = config.source.login ?
-  config.source.login + ':' + config.source.password + '@' : '';
+config.source.login + ':' + config.source.password + '@' : '';
 
 var app = express();
 app.use(bodyParser.json());
@@ -28,6 +28,8 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(logger('dev'));
 
+var interval = config.interval ? config.interval * 60 * 1000 : 5 * 60 * 1000;
+var cache = new (require('./cache.js'))(interval);
 var router = express.Router();
 
 router.use(function(req, res, next) {
@@ -36,7 +38,7 @@ router.use(function(req, res, next) {
 
 require('./routes/routes.js')(router);
 require('./routes/users.js')(router);
-require('./routes/teams.js')(router);
+require('./routes/teams.js')(router, cache);
 
 app.use(express.static(__dirname + '/public'));
 
