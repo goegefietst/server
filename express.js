@@ -28,7 +28,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(logger('dev'));
 
-var interval = config.interval ? config.interval * 60 * 1000 : 5 * 60 * 1000;
+var interval = config.cache ? config.cache * 60 * 1000 : 5 * 60 * 1000;
 var cache = new (require('./cache.js'))(interval);
 var router = express.Router();
 
@@ -36,9 +36,9 @@ router.use(function(req, res, next) {
   next();
 });
 
-require('./routes/routes.js')(router);
-require('./routes/users.js')(router);
-require('./routes/teams.js')(router, cache);
+require('./controllers/route.controller.js')(router);
+require('./controllers/user.controller.js')(router);
+require('./controllers/team.controller.js')(router, cache, config.admin);
 
 app.use(express.static(__dirname + '/public'));
 

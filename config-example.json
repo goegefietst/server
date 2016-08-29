@@ -12,5 +12,9 @@
     "password" : "admin"
   },
   "port" : 3000,
-  "interval" : 5
+  "cache" : 5,
+  "admin" : {
+    "login" : "admin",
+    "password" : "admin"
+  }
 }

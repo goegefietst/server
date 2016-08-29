@@ -20,8 +20,10 @@ Cache.prototype.addPair = function(pair) {
   this.dictionary[pair.key] = pair.value;
 };
 
-Cache.prototype.addFunction = function(fn) {
-  this.fns.push(fn);
+//takes key and function, replaces cache value of key with result of function on every iteration
+//function should return promise
+Cache.prototype.addFunction = function(key, fn) {
+  this.fns.push(wrap(key, fn));
 };
 
 Cache.prototype.loop = function(msTimeout) {
@@ -43,5 +45,13 @@ Cache.prototype.stop = function() {
     this.timeout.clearTimeout();
   }
 };
+
+function wrap(key, fn) {
+  return function() {
+    return fn().then(function(value) {
+      return {key: key, value: value};
+    });
+  };
+}
 
 module.exports = Cache;

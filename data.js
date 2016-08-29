@@ -1,8 +1,8 @@
 var path = require('path');
 var fs = require('fs');
 var Q = require('q');
-var CategoryController = require('./controllers/categories.js');
-var TeamController = require('./controllers/teams.js');
+var CategoryService = require('./services/category.service.js');
+var TeamService = require('./services/team.service.js');
 
 var data = JSON.parse(fs.readFileSync(path.join(__dirname, './data.json'), {
   encoding: 'utf8'
@@ -10,23 +10,16 @@ var data = JSON.parse(fs.readFileSync(path.join(__dirname, './data.json'), {
 
 function insertCategories() {
   return data.categories.map(function(category) {
-    return CategoryController.getCategory(category.name).catch(function() {
-      return CategoryController.saveCategory(category.name);
+    return CategoryService.findByName(category.name).catch(function() {
+      return CategoryService.save(category.name);
     });
   });
 }
 
 function insertTeams() {
   return data.teams.map(function(team) {
-    return CategoryController.getCategory(team.category).then(function() {
-      return TeamController.getTeam(team.name).then(function() {
-        //console.log('Team \"' + team.name + '\" exists already');
-      }).catch(function() {
-        return TeamController.saveTeam(team);
-      });
-    }).catch(function() {
-      console.log('Cannot add team \"' + team.name +
-        '\" because its category \"' + team.category + '\" does not exist');
+    return CategoryService.findByName(team.category).then(function() {
+      return TeamService.save(team);
     });
   });
 }
