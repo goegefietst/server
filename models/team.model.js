@@ -1,9 +1,9 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+module.exports = function(mongoose) {
 
-var TeamSchema = new Schema({
-  name: String,
-  category: String
-});
+  var TeamSchema = new mongoose.Schema({
+    name: {type: String, required: true},
+    category: {type: String, required: true}
+  });
 
-module.exports = mongoose.model('Team', TeamSchema);
+  return mongoose.model('Team', TeamSchema);
+};

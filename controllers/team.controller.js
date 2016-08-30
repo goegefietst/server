@@ -1,16 +1,17 @@
 var Q = require('q');
-var CategoryService = require('../services/category.service.js');
-var TeamService = require('../services/team.service.js');
-var RouteService = require('../services/route.service.js');
 
-var TeamController = function(router, cache, admin) {
+var TeamController = function(router, services, admin) {
   var TEAMS = 'TEAMS';
+  var cache = services.cache;
+  var categoryService = services.category;
+  var teamService = services.team;
+  var routeService = services.route;
 
   cache.addFunction(TEAMS, getTeams);
 
   // fixme changed from /teams/distances to /teams
   router.route('/teams').get(function(req, res) {
-    var cached = cache.getValue.bind(cache)(TEAMS);
+    var cached = cache.getValue.call(cache, TEAMS);
     if (cached) {
       respond(cached);
     } else {
@@ -40,14 +41,27 @@ var TeamController = function(router, cache, admin) {
         message: 'Unauthorized'
       });
     }
-    if (!req.body || !req.body.team || !req.body.team.category) {
-      error();
+    if (!req.body) {
+      error({
+        status: 400,
+        message: 'No body'
+      });
     }
-    CategoryService.findByName(req.body.team.category)
-      .then(function() {
-        return req.body.team;
+    teamService.validate(req.body)
+      .then(function(team) {
+        return categoryService.findByName(team.category)
+          .then(function(categories) {
+            if (categories.length > 0) {
+              return team;
+            } else {
+              return Q.reject({
+                status: 400,
+                message: 'No category with that name'
+              });
+            }
+          });
       })
-      .then(TeamService.save)
+      .then(teamService.save.bind(teamService))
       .then(respond).catch(error);
 
     function respond(docs) {
@@ -64,20 +78,24 @@ var TeamController = function(router, cache, admin) {
       }
     }
   });
-};
 
-function getTeams() {
-  return TeamService.findAll().then(addDistances);
-  function addDistances(teams) {
-    if (teams.length < 1) {
-      return teams;
+  function getTeams() {
+    return teamService.findAll().then(addDistances);
+    function addDistances(teams) {
+      if (teams.length < 1) {
+        return teams;
+      }
+      var promises = [];
+      for (var i = 0; i < teams.length; i++) {
+        promises.push(routeService.addDistanceToTeam(teams[i].toObject()));
+      }
+      return Q.all(promises);
     }
-    var promises = [];
-    for (var i = 0; i < teams.length; i++) {
-      promises.push(RouteService.addDistanceToTeam(teams[i].toObject()));
-    }
-    return Q.all(promises);
   }
-}
+
+  function validate() {
+
+  }
+};
 
 module.exports = TeamController;

@@ -1,10 +1,11 @@
-var Team = require('./../models/team.model.js');
 var Q = require('q');
 
-var TeamService = function() {
+var TeamService = function(model, util) {
+  this.model = model;
+  this.util = util;
 };
 
-TeamService.save = function(team) {
+TeamService.prototype.save = function(team) {
   if (!team || typeof team !== 'object' || !team.category || !team.name) {
     return Q.reject({
       status: 400,
@@ -12,9 +13,9 @@ TeamService.save = function(team) {
       'properties  \'name\' and \'category\''
     });
   }
-  return TeamService.findByName(team.name)
+  return this.findByName(team.name)
     .then(alreadyExists)
-    .then(save);
+    .then(save.bind(this));
 
   function alreadyExists(teams) {
     if (teams.length > 0) {
@@ -26,42 +27,59 @@ TeamService.save = function(team) {
   }
 
   function save() {
-    return Team.create({
+    return this.model.create({
       category: team.category,
       name: team.name
     });
   }
 };
 
-TeamService.findByName = function(name) {
+TeamService.prototype.findByName = function(name) {
   if (!name || typeof name !== 'string') {
     return Q.reject({
       status: 400,
       message: 'String \'name\' required to find team by name'
     });
   }
-  return Team.find({name: name})
+  return this.model.find({name: name})
     .select({name: 1, category: 1, _id: 0})
     .limit(1)
     .exec();
 };
 
-TeamService.findByCategory = function(name) {
+TeamService.prototype.findByCategory = function(name) {
   if (!name || typeof name !== 'string') {
     return Q.reject({
       status: 400,
       message: 'String \'name\' of category required to find team by category'
     });
   }
-  return Team.find({$elemMatch: {name: name}})
+  return this.model.find({$elemMatch: {name: name}})
     .select({name: 1, category: 1, _id: 0})
     .exec();
 };
 
-TeamService.findAll = function() {
-  return Team.find({})
+TeamService.prototype.findAll = function() {
+  return this.model.find({})
     .select({name: 1, category: 1, _id: 0})
     .exec();
+};
+
+TeamService.prototype.validate = function(team) {
+  var doc = this.model(team);
+  var deferred = Q.defer();
+  doc.validate(function(err) {
+    if (!err) {
+      deferred.resolve(doc.toObject());
+    } else {
+      deferred.reject({
+        status: 400,
+        message: 'Incorrect body, correct schema is: \n' +
+        JSON.stringify(this.util.objectify(doc), null, 2)
+      });
+    }
+  }.bind(this));
+  return deferred.promise;
 };
 
 module.exports = TeamService;

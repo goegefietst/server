@@ -1,10 +1,9 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+module.exports = function(mongoose) {
 
-var UserSchema = new Schema({
-  uuid: String,
-  secret: String,
-  teams: [{name: String, category: String}]
-});
+  var UserSchema = new mongoose.Schema({
+    uuid: {type: String, required: true},
+    secret: {type: String, required: true}
+  });
 
-module.exports = mongoose.model('User', UserSchema);
+  return mongoose.model('User', UserSchema);
+};

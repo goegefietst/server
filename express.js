@@ -27,18 +27,32 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(logger('dev'));
+mongoose.connect(config.source.type + '://' + login + config.source.host +
+  ':' + config.source.port + '/' + config.source.db);
 
-var interval = config.cache ? config.cache * 60 * 1000 : 5 * 60 * 1000;
-var cache = new (require('./cache.js'))(interval);
 var router = express.Router();
-
 router.use(function(req, res, next) {
   next();
 });
-
-require('./controllers/route.controller.js')(router);
-require('./controllers/user.controller.js')(router);
-require('./controllers/team.controller.js')(router, cache, config.admin);
+var interval = config.cache ? config.cache * 60 * 1000 : 5 * 60 * 1000;
+var models = {
+  category: require('./models/category.model')(mongoose),
+  route: require('./models/route.model')(mongoose),
+  team: require('./models/team.model')(mongoose),
+  user: require('./models/user.model')(mongoose),
+  util: require('./models/model.util')
+};
+var services = {
+  cache: new (require('./cache.js'))(interval),
+  category: new (require('./services/category.service'))(models.category, models.util),
+  route: new (require('./services/route.service'))(models.route, models.util),
+  team: new (require('./services/team.service'))(models.team, models.util),
+  user: new (require('./services/user.service.js'))(models.user, models.util)
+};
+require('./controllers/route.controller.js')(router, services);
+require('./controllers/user.controller.js')(router, services);
+require('./controllers/team.controller.js')(router, services, config.admin);
+require('./data.js')(services);
 
 app.use(express.static(__dirname + '/public'));
 
@@ -50,12 +64,7 @@ router.get('/policy', function(req, res) {
   res.sendFile(__dirname + '/public/policy.html');
 });
 
-mongoose.connect(config.source.type + '://' + login + config.source.host +
-  ':' + config.source.port + '/' + config.source.db);
-
 app.use('/', router);
-
-require('./data.js')();
 
 app.listen(port, function() {
   console.log('Express server listening on port ' + port);

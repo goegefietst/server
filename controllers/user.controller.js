@@ -1,17 +1,9 @@
-var UserService = require('../services/user.service.js');
-
-var UserController = function(router) {
+var UserController = function(router, services) {
+  var userService = services.user;
 
   //fixme changed from /user to /users, change in app accordingly
   router.route('/users').post(function(req, res) {
-    if (req.body.uuid) {
-      //Fixme try to remember what this should be for
-    } else {
-      //console.log('Trying to generate user');
-      //UserService.generateUser().then(respond).catch(error);
-    }
-
-    UserService.generateUser().then(respond).catch(error);
+    userService.generateUser().then(respond).catch(error);
 
     function respond(user) {
       return res.status(201).json({

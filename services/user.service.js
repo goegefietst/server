@@ -1,22 +1,26 @@
-var User = require('../models/user.model.js');
 var crypto = require('crypto');
 var Q = require('q');
 
-var UserService = function() {
+var UserService = function(model, util) {
+  this.model = model;
+  this.util = util;
 };
 
-UserService.generateUser = function(prevCount) {
+UserService.prototype.generateUser = function(prevCount) {
   var count = 0;
-  var user = new User();
   if (prevCount) {
     count = prevCount;
   }
-  user.uuid = generateUUID();
-  user.secret = generateSecret();
-  return isNewUser(user).then(saveUser).catch(tryAgain);
+  var user = {
+    uuid: generateUUID(),
+    secret: generateSecret()
+  };
+  return this.isNewUser(user)
+    .then(saveUser.bind(this))
+    .catch(tryAgain.bind(this));
 
   function saveUser(user) {
-    return user.save();
+    return this.model.create(user);
   }
 
   function tryAgain() {
@@ -24,11 +28,11 @@ UserService.generateUser = function(prevCount) {
       console.log('Tried and failed to generate a user five times');
       return;
     }
-    UserService.generateUser(count);
+    this.generateUser(count);
   }
 };
 
-UserService.checkUserInfo = function(uuid, secret) {
+UserService.prototype.checkUserInfo = function(uuid, secret) {
   if (!uuid || typeof uuid !== 'string' || !secret ||
     typeof secret !== 'string') {
     return Q.reject({
@@ -37,7 +41,7 @@ UserService.checkUserInfo = function(uuid, secret) {
       'required to check user info'
     });
   }
-  return User.find({'uuid': uuid, 'secret': secret})
+  return this.model.find({'uuid': uuid, 'secret': secret})
     .exec()
     .then(check);
 
@@ -53,7 +57,7 @@ UserService.checkUserInfo = function(uuid, secret) {
   }
 };
 
-function isNewUser(user) {
+UserService.prototype.isNewUser = function(user) {
   if (!user || !user.secret) {
     return Q.reject({
       status: 400,
@@ -61,7 +65,7 @@ function isNewUser(user) {
       'required to check if user is new'
     });
   }
-  return User.find({'uuid': user.uuid})
+  return this.model.find({'uuid': user.uuid})
     .exec()
     .then(check);
 
@@ -72,7 +76,24 @@ function isNewUser(user) {
       return false;
     }
   }
-}
+};
+
+UserService.prototype.validate = function(user) {
+  var doc = this.model(user);
+  var deferred = Q.defer();
+  doc.validate(function(err) {
+    if (!err) {
+      deferred.resolve(doc.toObject());
+    } else {
+      deferred.reject({
+        status: 400,
+        message: 'Incorrect body, correct schema is: \n' +
+        JSON.stringify(this.util.objectify(doc), null, 2)
+      });
+    }
+  }.bind(this));
+  return deferred.promise;
+};
 
 function generateUUID() {
   var d = new Date().getTime();

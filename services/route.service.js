@@ -1,10 +1,11 @@
-var Route = require('./../models/route.model.js');
 var Q = require('q');
 
-var RouteService = function() {
+var RouteService = function(model, util) {
+  this.model = model;
+  this.util = util;
 };
 
-RouteService.save = function(route) {
+RouteService.prototype.save = function(route) {
   if (!route || !route.uuid || !route.points || !route.teams) {
     return Q.reject({
       status: 400,
@@ -12,7 +13,7 @@ RouteService.save = function(route) {
       '\'uuid\', \'points\' and \'teams\''
     });
   }
-  return Route.create({
+  return this.model.create({
     uuid: route.uuid,
     points: route.points,
     time: route.time,
@@ -21,19 +22,19 @@ RouteService.save = function(route) {
   });
 };
 
-RouteService.findByUserId = function(uuid) {
+RouteService.prototype.findByUserId = function(uuid) {
   if (!uuid) {
     return Q.reject({
       status: 400,
       message: 'String \'uuid\' required to find route by user'
     });
   }
-  return Route.find({'uuid': uuid})
+  return this.model.find({'uuid': uuid})
     .select({uuid: 1, points: 1, distance: 1, time: 1, teams: 1, _id: 0})
     .exec();
 };
 
-RouteService.findByTeam = function(team) {
+RouteService.prototype.findByTeam = function(team) {
   if (!team || !team.name) {
     return Q.reject({
       status: 400,
@@ -41,12 +42,12 @@ RouteService.findByTeam = function(team) {
       ' to find route by team'
     });
   }
-  return Route.find({$match: {teams: {$elemMatch: {name: team.name}}}})
+  return this.model.find({$match: {teams: {$elemMatch: {name: team.name}}}})
     .select({uuid: 1, points: 1, distance: 1, time: 1, teams: 1, _id: 0})
     .exec();
 };
 
-RouteService.addDistanceToTeam = function(team) {
+RouteService.prototype.addDistanceToTeam = function(team) {
   if (!team || !team.name) {
     return Q.reject({
       status: 400,
@@ -72,7 +73,24 @@ RouteService.addDistanceToTeam = function(team) {
       deferred.resolve(team);
     }
   };
-  Route.aggregate(pipeline, wrap);
+  this.model.aggregate(pipeline, wrap);
+  return deferred.promise;
+};
+
+RouteService.prototype.validate = function(route) {
+  var doc = this.model(route);
+  var deferred = Q.defer();
+  doc.validate(function(err) {
+    if (!err) {
+      deferred.resolve(doc.toObject());
+    } else {
+      deferred.reject({
+        status: 400,
+        message: 'Incorrect body, correct schema is: \n' +
+        JSON.stringify(this.util.objectify(doc), null, 2)
+      });
+    }
+  }.bind(this));
   return deferred.promise;
 };
 

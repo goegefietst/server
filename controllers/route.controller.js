@@ -1,23 +1,31 @@
-var RouteService = require('../services/route.service.js');
-var UserService = require('../services/user.service.js');
-
-var RouteController = function(router) {
+var RouteController = function(router, services) {
+  var routeService = services.route;
+  var userService = services.user;
 
   // fixme changed from /route/:uuid to /routes
   router.route('/routes').post(function(req, res) {
-    var route = {
-      uuid: req.body.uuid, //fixme changed from params to body
-      secret: req.header('secret'),
-      points: req.body.points,
-      distance: req.body.distance,
-      time: req.body.time,
-      teams: req.body.teams
-    };
-    UserService.checkUserInfo(req.body.uuid, req.header('secret'))
-      .then(function() {
-        return route;
+    /*var route = {
+     uuid: req.body.uuid, //fixme changed from params to body
+     secret: req.header('secret'),
+     points: req.body.points,
+     distance: req.body.distance,
+     time: req.body.time,
+     teams: req.body.teams
+     };*/
+    if (!req.body) {
+      error({
+        status: 400,
+        message: 'No body'
+      });
+    }
+    routeService.validate(req.body)
+      .then(function(route) {
+        return userService.checkUserInfo(route.uuid, req.header('secret'))
+          .then(function() {
+            return route;
+          });
       })
-      .then(RouteService.save)
+      .then(routeService.save.bind(routeService))
       .then(respond)
       .catch(error);
 
@@ -42,8 +50,8 @@ var RouteController = function(router) {
   router.route('/routes/:uuid.json').get(function(req, res) {
     var uuid = req.params.uuid;
     var secret = req.header('secret');
-    UserService.checkUserInfo(uuid, secret)
-      .then(RouteService.findByUserId)
+    userService.checkUserInfo(uuid, secret)
+      .then(routeService.findByUserId.bind(routeService))
       .then(respond)
       .catch(error);
 
