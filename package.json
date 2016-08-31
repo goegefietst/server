@@ -1,16 +1,21 @@
 {
-  "name": "goegefietst_server",
+  "name": "goegefietst-server",
   "version": "0.0.1",
-  "description": "",
-  "main": "express.js",
+  "description": "Goe Gefietst server",
+  "author": "TreinTramBus",
+  "license": "GNU GPLv3",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Buccaneer/goegefietst_server.git"
+    "url": "https://github.com/goegefietst/server.git"
   },
-  "author": "Goegefietst",
-  "license": "Todo add license",
   "bugs": {
-    "url": "https://github.com/buccaneer/goegefietst_server/issues"
+    "url": "https://github.com/goegefietst/server/issues"
+  },
+  "main": "express.js",
+  "devDependencies": {
+    "expect.js": "0.3.1",
+    "mocha": "2.0.1",
+    "superagent": "0.20.0"
   },
   "dependencies": {
     "body-parser": "1.9.2",
@@ -22,10 +27,5 @@
     "morgan": "1.5.0",
     "path": "0.12.7",
     "q": "1.4.1"
-  },
-  "devDependencies": {
-    "expect.js": "0.3.1",
-    "mocha": "2.0.1",
-    "superagent": "0.20.0"
   }
 }
