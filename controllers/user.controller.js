@@ -1,7 +1,6 @@
 var UserController = function(router, services) {
   var userService = services.user;
 
-  //fixme changed from /user to /users, change in app accordingly
   router.route('/users').post(function(req, res) {
     userService.generateUser().then(respond).catch(error);
 

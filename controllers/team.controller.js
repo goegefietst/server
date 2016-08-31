@@ -9,7 +9,6 @@ var TeamController = function(router, services, admin) {
 
   cache.addFunction(TEAMS, getTeams);
 
-  // fixme changed from /teams/distances to /teams
   router.route('/teams').get(function(req, res) {
     var cached = cache.getValue.call(cache, TEAMS);
     if (cached) {
@@ -91,10 +90,6 @@ var TeamController = function(router, services, admin) {
       }
       return Q.all(promises);
     }
-  }
-
-  function validate() {
-
   }
 };
 
