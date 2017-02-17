@@ -16,7 +16,7 @@ var Data = function(services) {
 
 function insertCategories() {
   return data.categories.map(function(category) {
-    return Data.CategoryService.findByName(category.name).catch(function() {
+    return Data.CategoryService.findByName(category.name).then(function() {
       return Data.CategoryService.save(category.name);
     });
   });
