@@ -1,64 +1,579 @@
 {
-    "categories": [{
-        "name": "School"
-    }, {
-        "name": "Faculty"
-    }, {
-        "name": "Association"
-    }],
-    "teams": [{
-        "name": "HoGent",
-        "category": "School"
-    }, {
-        "name": "UGent",
-        "category": "School"
-    }, {
-        "name": "Artevelde",
-        "category": "School"
-    }, {
-        "name": "Odisee",
-        "category": "School"
-    }, {
-        "name": "LUCA",
-        "category": "School"
-    }, {
-        "name": "Bedrijf en organisatie",
-        "category": "Faculty"
-    }, {
-        "name": "Bio-ingenieurswetenschappen",
-        "category": "Faculty"
-    }, {
-        "name": "Geologie",
-        "category": "Faculty"
-    }, {
-        "name": "Ingenieurswetenschappen en Architectuur",
-        "category": "Faculty"
-    }, {
-        "name": "Letteren en Wijsbegeerte",
-        "category": "Faculty"
-    }, {
-        "name": "Economie en Bedrijfskunde",
-        "category": "Faculty"
-    }, {
-        "name": "Bacchus",
-        "category": "Association"
-    }, {
-        "name": "VLK",
-        "category": "Association"
-    }, {
-        "name": "VTK",
-        "category": "Association"
-    }, {
-        "name": "VDK",
-        "category": "Association"
-    }, {
-        "name": "VGK",
-        "category": "Association"
-    }, {
-        "name": "WiNa",
-        "category": "Association"
-    }, {
-        "name": "Chemica",
-        "category": "Association"
-    }]
+  "categories": [
+    {
+      "name": "School"
+    },
+    {
+      "name": "Faculty"
+    },
+    {
+      "name": "Association"
+    }
+  ],
+  "teams": [
+    {
+      "name": "HoGent",
+      "category": "School"
+    },
+    {
+      "name": "UGent",
+      "category": "School"
+    },
+    {
+      "name": "Artevelde",
+      "category": "School"
+    },
+    {
+      "name": "Odisee",
+      "category": "School"
+    },
+    {
+      "name": "LUCA",
+      "category": "School"
+    },
+    {
+      "name": "Letteren en wijsbegeerte",
+      "category": "Faculty"
+    },
+    {
+      "name": "Wetenschappen",
+      "category": "Faculty"
+    },
+    {
+      "name": "Geneeskunde & gezondheidswetenschappen",
+      "category": "Faculty"
+    },
+    {
+      "name": "Economie en Bedrijfskunde ",
+      "category": "Faculty"
+    },
+    {
+      "name": "Farmaceustische wetenschappen ",
+      "category": "Faculty"
+    },
+    {
+      "name": "Psychologie & pedagogische wetenschappen",
+      "category": "Faculty"
+    },
+    {
+      "name": "Dierengeneeskunde ",
+      "category": "Faculty"
+    },
+    {
+      "name": "Rechtsgeleerdheid",
+      "category": "Faculty"
+    },
+    {
+      "name": "Politieke & sociale wetenschappen ",
+      "category": "Faculty"
+    },
+    {
+      "name": "Bedrijf en organisatie",
+      "category": "Faculty"
+    },
+    {
+      "name": "Bio-ingenieurswetenschappen",
+      "category": "Faculty"
+    },
+    {
+      "name": "Geologie",
+      "category": "Faculty"
+    },
+    {
+      "name": "Ingenieurswetenschappen en Architectuur",
+      "category": "Faculty"
+    },
+    {
+      "name": "Abnormalia",
+      "category": "Association"
+    },
+    {
+      "name": "Curatio",
+      "category": "Association"
+    },
+    {
+      "name": "Hospitalia ",
+      "category": "Association"
+    },
+    {
+      "name": "Karaat ",
+      "category": "Association"
+    },
+    {
+      "name": "Moeder Gutenberg",
+      "category": "Association"
+    },
+    {
+      "name": "Podoa ",
+      "category": "Association"
+    },
+    {
+      "name": "Regent ",
+      "category": "Association"
+    },
+    {
+      "name": "CLUB KILA",
+      "category": "Association"
+    },
+    {
+      "name": "CLUB MEGA ",
+      "category": "Association"
+    },
+    {
+      "name": "Anabolica  (Lerarenopleiding)",
+      "category": "Association"
+    },
+    {
+      "name": "Aphonia",
+      "category": "Association"
+    },
+    {
+      "name": "Apollo",
+      "category": "Association"
+    },
+    {
+      "name": "Confabula",
+      "category": "Association"
+    },
+    {
+      "name": "Drag",
+      "category": "Association"
+    },
+    {
+      "name": "Eligere",
+      "category": "Association"
+    },
+    {
+      "name": "Harmonia",
+      "category": "Association"
+    },
+    {
+      "name": "Hortecta",
+      "category": "Association"
+    },
+    {
+      "name": "KAF",
+      "category": "Association"
+    },
+    {
+      "name": "Mercator",
+      "category": "Association"
+    },
+    {
+      "name": "Mercurius",
+      "category": "Association"
+    },
+    {
+      "name": "Nemesis",
+      "category": "Association"
+    },
+    {
+      "name": "Pihonia",
+      "category": "Association"
+    },
+    {
+      "name": "Salmonella",
+      "category": "Association"
+    },
+    {
+      "name": "Dionyseia",
+      "category": "Association"
+    },
+    {
+      "name": "t Stropke ",
+      "category": "Association"
+    },
+    {
+      "name": "t Wielke",
+      "category": "Association"
+    },
+    {
+      "name": "t Zal wel Gaan",
+      "category": "Association"
+    },
+    {
+      "name": "12Urenloop",
+      "category": "Association"
+    },
+    {
+      "name": "Actief Linkse Studenten",
+      "category": "Association"
+    },
+    {
+      "name": "AIESEC",
+      "category": "Association"
+    },
+    {
+      "name": "Antwerpen Boven",
+      "category": "Association"
+    },
+    {
+      "name": "Archeologische Werkgroep",
+      "category": "Association"
+    },
+    {
+      "name": "Belgian Medical Students Association",
+      "category": "Association"
+    },
+    {
+      "name": "Board of European Students of Technology Ghent",
+      "category": "Association"
+    },
+    {
+      "name": "Brugse Universitaire Kring",
+      "category": "Association"
+    },
+    {
+      "name": "Capitant Gent",
+      "category": "Association"
+    },
+    {
+      "name": "Ceneka",
+      "category": "Association"
+    },
+    {
+      "name": "Chemica",
+      "category": "Association"
+    },
+    {
+      "name": "Chinese Students Organisation",
+      "category": "Association"
+    },
+    {
+      "name": "Christen Democratische Studenten",
+      "category": "Association"
+    },
+    {
+      "name": "Comac",
+      "category": "Association"
+    },
+    {
+      "name": "De Loeiende Koe",
+      "category": "Association"
+    },
+    {
+      "name": "Deliria",
+      "category": "Association"
+    },
+    {
+      "name": "Dentalia",
+      "category": "Association"
+    },
+    {
+      "name": "Dionysus",
+      "category": "Association"
+    },
+    {
+      "name": "Erasmus Student Network",
+      "category": "Association"
+    },
+    {
+      "name": "Faculteiten Konvent",
+      "category": "Association"
+    },
+    {
+      "name": "Flanders Youth Society for Entrepreneurship",
+      "category": "Association"
+    },
+    {
+      "name": "FLUX",
+      "category": "Association"
+    },
+    {
+      "name": "Fotoklas",
+      "category": "Association"
+    },
+    {
+      "name": "Geeraard",
+      "category": "Association"
+    },
+    {
+      "name": "Gentse Studentenraad",
+      "category": "Association"
+    },
+    {
+      "name": "Gents Universitair Harmonie Orkest",
+      "category": "Association"
+    },
+    {
+      "name": "Gents Universitair Koor",
+      "category": "Association"
+    },
+    {
+      "name": "Gentse Biologische Kring",
+      "category": "Association"
+    },
+    {
+      "name": "Gentse Farma Kring",
+      "category": "Association"
+    },
+    {
+      "name": "Gentse Universitaire Dansclub",
+      "category": "Association"
+    },
+    {
+      "name": "Geografica",
+      "category": "Association"
+    },
+    {
+      "name": "Geologica",
+      "category": "Association"
+    },
+    {
+      "name": "Ghent Students Club",
+      "category": "Association"
+    },
+    {
+      "name": "Groene Kring",
+      "category": "Association"
+    },
+    {
+      "name": "Hermes",
+      "category": "Association"
+    },
+    {
+      "name": "Hoger Instituur voor lichamelijke opvoeding ",
+      "category": "Association"
+    },
+    {
+      "name": "Home Astrid",
+      "category": "Association"
+    },
+    {
+      "name": "Home Bertha De Vrieze",
+      "category": "Association"
+    },
+    {
+      "name": "Home Boudewijn",
+      "category": "Association"
+    },
+    {
+      "name": "Home Fabiola",
+      "category": "Association"
+    },
+    {
+      "name": "HSC Dijlebrassers",
+      "category": "Association"
+    },
+    {
+      "name": "IEEE Student Branch Gent",
+      "category": "Association"
+    },
+    {
+      "name": "Internationaal Konvent",
+      "category": "Association"
+    },
+    {
+      "name": "International Students Association",
+      "category": "Association"
+    },
+    {
+      "name": "Internia",
+      "category": "Association"
+    },
+    {
+      "name": "Jong Groen Stugent",
+      "category": "Association"
+    },
+    {
+      "name": "Jonge N-VA Ugent",
+      "category": "Association"
+    },
+    {
+      "name": "Jonge Europese Federalisten",
+      "category": "Association"
+    },
+    {
+      "name": "Jong Socialisten StuGent",
+      "category": "Association"
+    },
+    {
+      "name": "Kajira",
+      "category": "Association"
+    },
+    {
+      "name": "Katholiek Vlaams Hoogstudenten Verbond",
+      "category": "Association"
+    },
+    {
+      "name": "klassieke Kring",
+      "category": "Association"
+    },
+    {
+      "name": "Laetitia",
+      "category": "Association"
+    },
+    {
+      "name": "Liberaal Vlaams Studentenverbond",
+      "category": "Association"
+    },
+    {
+      "name": "LILA",
+      "category": "Association"
+    },
+    {
+      "name": "Limburgia",
+      "category": "Association"
+    },
+    {
+      "name": "Lombrosiana",
+      "category": "Association"
+    },
+    {
+      "name": "MaChT",
+      "category": "Association"
+    },
+    {
+      "name": "Massacantus",
+      "category": "Association"
+    },
+    {
+      "name": "Matrak",
+      "category": "Association"
+    },
+    {
+      "name": "Minos Gent",
+      "category": "Association"
+    },
+    {
+      "name": "Moeder Domper",
+      "category": "Association"
+    },
+    {
+      "name": "Moeder Egmont",
+      "category": "Association"
+    },
+    {
+      "name": "Moeder Lies",
+      "category": "Association"
+    },
+    {
+      "name": "Moeder Meetjesland",
+      "category": "Association"
+    },
+    {
+      "name": "Moeder Oilsjterse",
+      "category": "Association"
+    },
+    {
+      "name": "Moeder Theepot",
+      "category": "Association"
+    },
+    {
+      "name": "Noord-Zuid Studenten",
+      "category": "Association"
+    },
+    {
+      "name": "Pkarus",
+      "category": "Association"
+    },
+    {
+      "name": "Politeia",
+      "category": "Association"
+    },
+    {
+      "name": "Poutrix",
+      "category": "Association"
+    },
+    {
+      "name": "Prime",
+      "category": "Association"
+    },
+    {
+      "name": "Rodenbach",
+      "category": "Association"
+    },
+    {
+      "name": "Scaldis",
+      "category": "Association"
+    },
+    {
+      "name": "Schamper",
+      "category": "Association"
+    },
+    {
+      "name": "Sd'A",
+      "category": "Association"
+    },
+    {
+      "name": "Sense",
+      "category": "Association"
+    },
+    {
+      "name": "Slavia",
+      "category": "Association"
+    },
+    {
+      "name": "Studentenfanfare",
+      "category": "Association"
+    },
+    {
+      "name": "StudentenPastoraal Gent ",
+      "category": "Association"
+    },
+    {
+      "name": "Vereniging voor Natuurkunde",
+      "category": "Association"
+    },
+    {
+      "name": "Verkeerd Geparkeerd",
+      "category": "Association"
+    },
+    {
+      "name": "VeTo Gent",
+      "category": "Association"
+    },
+    {
+      "name": "Vinasag",
+      "category": "Association"
+    },
+    {
+      "name": "Vlaamse Biomedische Kring",
+      "category": "Association"
+    },
+    {
+      "name": "Vlaamse Diergeneeskundige Kring",
+      "category": "Association"
+    },
+    {
+      "name": "Vlaamse Economische Kring",
+      "category": "Association"
+    },
+    {
+      "name": "Vlaamse Levenstechnische Kring",
+      "category": "Association"
+    },
+    {
+      "name": "Vlaamse Logopedische & Audiologische Kring",
+      "category": "Association"
+    },
+    {
+      "name": "Vlaamse Rechtsgenootschap",
+      "category": "Association"
+    },
+    {
+      "name": "Vlaamse Technische Kring ",
+      "category": "Association"
+    },
+    {
+      "name": "Wase Club",
+      "category": "Association"
+    },
+    {
+      "name": "Werkgroepen & Verenigingen Konvent",
+      "category": "Association"
+    },
+    {
+      "name": "Westlandia",
+      "category": "Association"
+    },
+    {
+      "name": "Zeus Werkgroep Informatica",
+      "category": "Association"
+    },
+    {
+      "name": "180 Degrees Consulting",
+      "category": "Association"
+    }
+  ]
 }
