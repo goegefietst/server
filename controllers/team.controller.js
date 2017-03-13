@@ -9,6 +9,7 @@ var TeamController = function(router, services, admin) {
 
   cache.addFunction(TEAMS, getTeams);
 
+
   router.route('/teams').get(function(req, res) {
     var cached = cache.getValue.call(cache, TEAMS);
     if (cached) {
@@ -64,8 +65,9 @@ var TeamController = function(router, services, admin) {
       .then(respond).catch(error);
 
     function respond(docs) {
-      getTeams().then(respond).catch(error);
-      //res.status(200).json(docs);
+      let teams = getTeams();
+      cache.addPair({key: "TEAMS", value: teams})
+      res.status(200).json(teams);
     }
 
     function error(err) {
