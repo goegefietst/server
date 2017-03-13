@@ -65,9 +65,10 @@ var TeamController = function(router, services, admin) {
       .then(respond).catch(error);
 
     function respond(docs) {
-      var teams = getTeams();
-      cache.addPair({key: "TEAMS", value: teams})
-      res.status(200).json(teams);
+      getTeams().then(function(result) {
+        cache.addPair({key: "TEAMS", value: result})
+        res.status(200).json(result);
+      });
     }
 
     function error(err) {
