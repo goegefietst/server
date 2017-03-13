@@ -64,7 +64,8 @@ var TeamController = function(router, services, admin) {
       .then(respond).catch(error);
 
     function respond(docs) {
-      res.status(200).json(docs);
+      getTeams().then(respond).catch(error);
+      //res.status(200).json(docs);
     }
 
     function error(err) {
