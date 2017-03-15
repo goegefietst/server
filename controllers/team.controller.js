@@ -117,7 +117,7 @@ var TeamController = function(router, services, admin) {
       }
       return Q.all(promises);
     }
-  }
+  };
 
   function getTeams() {
     return teamService.findAll().then(addDistances);
