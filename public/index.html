@@ -102,18 +102,56 @@
             <h2 class="section-heading">Scoreboard</h2>
             <hr class="light">
           </div>
-          <div class="col-md-12 text-center">
+		  <div class="col-md-4 text-center">
 			<div id="loading" ng-if="Scoreboard==null">Loading scoreboard...</div>
 			<div ng-if="Scoreboard!=null">
 				<table class="table">
 					<thead>
 					  <tr>
-						<th>Team</th>
-						<th style="text-align: center">Totale afstand</th>
+						<th>Verenigingen</th>
+						<th style="text-align: center; width: 100;">Afstand</th>
 					  </tr>
 					</thead>
 					<tbody>
-					  <tr ng-repeat="data in Scoreboard | orderBy : '-distance' | limitTo : 15">
+					  <tr ng-repeat="data in Scoreboard | orderBy : '-distance' | limitTo : 15 | filter : 'Faculty'">
+						<th>{{data.name}}</th>
+						<td>{{data.distance | number:2}} km</td>
+					  </tr>
+					</tbody>
+				</table>
+			</div>            
+          </div>
+          <div class="col-md-4 text-center">
+			<div id="loading" ng-if="Scoreboard==null">Loading scoreboard...</div>
+			<div ng-if="Scoreboard!=null">
+				<table class="table">
+					<thead>
+					  <tr>
+						<th>Scholen</th>
+						<th style="text-align: center; width: 100;">Afstand</th>
+					  </tr>
+					</thead>
+					<tbody>
+					  <tr ng-repeat="data in Scoreboard | orderBy : '-distance' | limitTo : 15 | filter : 'School'">
+						<th>{{data.name}}</th>
+						<td>{{data.distance | number:2}} km</td>
+					  </tr>
+					</tbody>
+				</table>
+			</div>            
+          </div>
+		  <div class="col-md-4 text-center">
+			<div id="loading" ng-if="Scoreboard==null">Loading scoreboard...</div>
+			<div ng-if="Scoreboard!=null">
+				<table class="table">
+					<thead>
+					  <tr>
+						<th>Teams</th>
+						<th style="text-align: center; width: 100px;">Afstand</th>
+					  </tr>
+					</thead>
+					<tbody>
+					  <tr ng-repeat="data in Scoreboard | orderBy : '-distance' | limitTo : 15 | filter : 'Association'">
 						<th>{{data.name}}</th>
 						<td>{{data.distance | number:2}} km</td>
 					  </tr>
