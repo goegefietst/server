@@ -67,7 +67,9 @@ var TeamController = function(router, services, admin) {
     function respond(docs) {
       getTeams().then(function(result) {
         //cache.addPair({key: "TEAMS", value: result})
-        cache.setValue({key: "TEAMS", value: []});
+        //cache.setValue({key: "TEAMS", value: []});
+        cache.stop();
+        cache.loop(60*1000); // 60 * 1000ms = 60s = 1 minute
         res.status(200).json(result);
       });
     }
