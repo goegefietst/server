@@ -47,8 +47,8 @@ RouteService.prototype.findByTeam = function(team) {
     .exec();
 };
 
-RouteService.prototype.addDistanceToTeam = function(team, fromDate = -1) {
-  team.fromDate = fromDate;
+RouteService.prototype.addDistanceToTeam = function(team) {
+  //team.fromDate = fromDate;
   if (!team || !team.name) {
     return Q.reject({
       status: 400,

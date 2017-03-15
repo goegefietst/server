@@ -113,7 +113,7 @@ var TeamController = function(router, services, admin) {
       }
       var promises = [];
       for (var i = 0; i < teams.length; i++) {
-        promises.push(routeService.addDistanceToTeam(teams[i].toObject(), 5));
+        promises.push(routeService.addDistanceToTeam(teams[i].toObject()));
       }
       return Q.all(promises);
     }
