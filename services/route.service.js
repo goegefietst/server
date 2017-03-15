@@ -59,8 +59,7 @@ RouteService.prototype.addDistanceToTeam = function(team, time) {
   var pipelineNoTime = [
     {
       $match: {
-        teams: {$elemMatch: {name: team.name}},
-
+        teams: {$elemMatch: {name: team.name}}
       }
     },
     {$group: {_id: '', distance: {$sum: '$distance'}}},
@@ -69,8 +68,10 @@ RouteService.prototype.addDistanceToTeam = function(team, time) {
   var pipelineWithTime = [
     {
       $match: {
-        teams: {$elemMatch: {name: team.name}},
-        points: {$elemMatch: {time: {'$gte': time}}}
+        $and: [
+          {teams: {$elemMatch: {name: team.name}}},
+          {points: {$elemMatch: {time: {'$gte': time}}}}
+        ]
       }
     },
     {$group: {_id: '', distance: {$sum: '$distance'}}},
