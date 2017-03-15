@@ -56,27 +56,32 @@ RouteService.prototype.addDistanceToTeam = function(team, time) {
     });
   }
   var deferred = Q.defer();
-  var pipelineNoTime = [
-    {
-      $match: {
-        teams: {$elemMatch: {name: team.name}}
-      }
-    },
-    {$group: {_id: '', distance: {$sum: '$distance'}}},
-    {$project: {_id: 0, distance: '$distance'}}
-  ];
-  var pipelineWithTime = [
-    {
-      $match: {
-        $and: [
-          {teams: {$elemMatch: {name: team.name}}},
-          {points: {$elemMatch: {time: {'$gte': time}}}}
-        ]
-      }
-    },
-    {$group: {_id: '', distance: {$sum: '$distance'}}},
-    {$project: {_id: 0, distance: '$distance'}}
-  ];
+  var pipeline;
+  if (time) {
+    time = parseInt(time);
+    pipeline = [
+      {
+        $match: {
+          $and: [
+            {teams: {$elemMatch: {name: team.name}}},
+            {points: {$elemMatch: {time: {'$gte': time}}}}
+          ]
+        }
+      },
+      {$group: {_id: '', distance: {$sum: '$distance'}}},
+      {$project: {_id: 0, distance: '$distance'}}
+    ];
+  } else {
+    pipeline = [
+      {
+        $match: {
+          teams: {$elemMatch: {name: team.name}}
+        }
+      },
+      {$group: {_id: '', distance: {$sum: '$distance'}}},
+      {$project: {_id: 0, distance: '$distance'}}
+    ];
+  }
   var wrap = function(err, res) {
     if (err) {
       deferred.reject(err);
@@ -90,11 +95,7 @@ RouteService.prototype.addDistanceToTeam = function(team, time) {
       deferred.resolve(team);
     }
   };
-  if (time) {
-    this.model.aggregate(pipelineWithTime, wrap);
-  } else {
-    this.model.aggregate(pipelineNoTime, wrap);
-  }
+  this.model.aggregate(pipeline, wrap);
   return deferred.promise;
 };
 

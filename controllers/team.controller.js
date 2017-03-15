@@ -9,7 +9,6 @@ var TeamController = function(router, services, admin) {
 
   cache.addFunction(TEAMS, getTeams);
 
-
   router.route('/teams').get(function(req, res) {
     var cached = cache.getValue.call(cache, TEAMS);
     if (cached) {
@@ -33,9 +32,9 @@ var TeamController = function(router, services, admin) {
     }
   });
 
-  router.route('/teams/:time').get(function(req, res) {
-    var time = req.params.time;
-    getTeamsWithDatetime(time).then(respond).catch(error);
+  router.route('/teams/:timestamp').get(function(req, res) {
+    var timestamp = req.params.timestamp;
+    getTeams(timestamp).then(respond).catch(error);
 
     function respond(teams) {
       res.status(200).json(teams);
@@ -104,7 +103,7 @@ var TeamController = function(router, services, admin) {
     }
   });
 
-  function getTeamsWithDatetime(time) {
+  function getTeams(timestamp) {
     return teamService.findAll().then(addDistances);
     function addDistances(teams) {
       if (teams.length < 1) {
@@ -113,22 +112,8 @@ var TeamController = function(router, services, admin) {
       var promises = [];
       for (var i = 0; i < teams.length; i++) {
         promises.push(
-          routeService.addDistanceToTeam(teams[i].toObject(), time)
+          routeService.addDistanceToTeam(teams[i].toObject(), timestamp)
         );
-      }
-      return Q.all(promises);
-    }
-  }
-
-  function getTeams() {
-    return teamService.findAll().then(addDistances);
-    function addDistances(teams) {
-      if (teams.length < 1) {
-        return teams;
-      }
-      var promises = [];
-      for (var i = 0; i < teams.length; i++) {
-        promises.push(routeService.addDistanceToTeam(teams[i].toObject()));
       }
       return Q.all(promises);
     }
