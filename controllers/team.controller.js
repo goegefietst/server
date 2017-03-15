@@ -33,6 +33,26 @@ var TeamController = function(router, services, admin) {
     }
   });
 
+    router.route('/teams/time').get(function(req, res) {
+
+    getTeamsWithdate().then(respond).catch(error);
+    
+
+    function respond(teams) {
+      res.status(200).json(teams);
+    }
+
+    function error(err) {
+      if (err && err.status && err.message) {
+        res.status(err.status).send(err.message);
+      } else {
+        res.status(500).send({
+          message: 'Internal server error'
+        });
+      }
+    }
+  });
+
   router.route('/teams').post(function(req, res) {
     if (admin.login !== req.header('login') ||
       admin.password !== req.header('password')) {
@@ -98,7 +118,6 @@ var TeamController = function(router, services, admin) {
       return Q.all(promises);
     }
   }
-};
 
   function getTeams() {
     return teamService.findAll().then(addDistances);
