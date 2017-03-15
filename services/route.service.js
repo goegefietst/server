@@ -67,6 +67,7 @@ RouteService.prototype.addDistanceToTeam = function(team) {
       deferred.reject(err);
     }
     if (res && res[0]) {
+      team.time = res[0].time;
       team.distance = res[0].distance;
       deferred.resolve(team);
     } else {
