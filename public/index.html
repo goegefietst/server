@@ -132,7 +132,7 @@
 					  </tr>
 					</thead>
 					<tbody>
-					  <tr ng-repeat="data in Scoreboard | orderBy : '-distance' | limitTo : 15 | filter : 'School'">
+					  <tr ng-repeat="data in Scoreboard | limitTo : 15 | filter : 'School' | orderBy : '-distance'">
 						<th>{{data.name}}</th>
 						<td>{{data.distance | number:2}} km</td>
 					  </tr>
@@ -151,7 +151,7 @@
 					  </tr>
 					</thead>
 					<tbody>
-					  <tr ng-repeat="data in Scoreboard | orderBy : '-distance' | limitTo : 15 | filter : 'Team'">
+					  <tr ng-repeat="data in Scoreboard | filter : 'Team' | orderBy : '-distance' | limitTo : 15">
 						<th>{{data.name}}</th>
 						<td>{{data.distance | number:2}} km</td>
 					  </tr>
