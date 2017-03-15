@@ -95,26 +95,9 @@
       </div>
     </section>
 
-
     <section class="bg-primary">
       <div class="container">
-        <div class="row">
-          <div class="col-lg-8 col-lg-offset-2 text-center">
-            <h2 class="section-heading">Waar we vandaag staan</h2>
-            <hr class="light">
-          </div>
-          <div class="col-md-4 text-center">
-            <img src="./img/tracker.png"/>
-          </div>
-          <div class="col-md-4 text-center">
-            <img src="./img/prestaties.png"/>
-          </div>
-          <div class="col-md-4 text-center">
-            <img src="./img/reminders.png"/>
-          </div>
-        </div>
-        
-        <div class="row" ng-app="GoeGefietstApp" ng-controller="ScoreboardController">
+		<div class="row" ng-app="GoeGefietstApp" ng-controller="ScoreboardController">
           <div class="col-lg-8 col-lg-offset-2 text-center">
             <h2 class="section-heading">Scoreboard</h2>
             <hr class="light">
@@ -122,44 +105,17 @@
           <div class="col-md-12 text-center">
 			<div id="loading" ng-if="Scoreboard==null">Loading scoreboard...</div>
 			<div ng-if="Scoreboard!=null">
-				<p>Totaal afstand reeds afgelegd: {{Scoreboard.totalDistance | number:2}}km</p>
-				<p>Gemiddelde afstand per rit: {{Scoreboard.averageDistance | number:2}}km</p>
-				<p ng-if="Scoreboard.totalDistanceToday!=null">Totaal afstand reeds afgelegd vandaag: {{Scoreboard.totalDistanceToday | number:2}}km</p>
-				<h3>Scorebord</h3>
 				<table class="table">
 					<thead>
 					  <tr>
 						<th>Team</th>
-						<th>Aantal ritten</th>
-						<th>Totale afstand</th>
-						<th>Gemiddelde afstand</th>
+						<th style="text-align: center">Totale afstand</th>
 					  </tr>
 					</thead>
 					<tbody>
-					  <tr ng-repeat="data in Scoreboard.scoreBoard">
-						<th>{{data.userName}}</th>
-						<td>{{data.entries}}</td>
-						<td>{{data.totalDistance | number:2}}km</td>
-						<td>{{data.averageDistance | number:2}}km</td>
-					  </tr>
-					</tbody>
-				</table>
-				<h3>Scorebord vandaag</h3>
-				<table class="table">
-					<thead>
-					  <tr>
-						<th>Team</th>
-						<th>Aantal ritten</th>
-						<th>Totale afstand</th>
-						<th>Gemiddelde afstand</th>
-					  </tr>
-					</thead>
-					<tbody>
-					  <tr ng-repeat="data in Scoreboard.scoreBoardToday">
-						<th>{{data.userName}}</th>
-						<td>{{data.entries}}</td>
-						<td>{{data.totalDistance | number:2}}km</td>
-						<td>{{data.averageDistance | number:2}}km</td>
+					  <tr ng-repeat="data in Scoreboard | orderBy : '-distance' | limitTo : 15">
+						<th>{{data.name}}</th>
+						<td>{{data.distance | number:2}} km</td>
 					  </tr>
 					</tbody>
 				</table>
