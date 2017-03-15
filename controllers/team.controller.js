@@ -66,7 +66,8 @@ var TeamController = function(router, services, admin) {
 
     function respond(docs) {
       getTeams().then(function(result) {
-        cache.addPair({key: "TEAMS", value: result})
+        //cache.addPair({key: "TEAMS", value: result})
+        cache.setValue({key: "TEAMS", value: []});
         res.status(200).json(result);
       });
     }
