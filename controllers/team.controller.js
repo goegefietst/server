@@ -33,10 +33,9 @@ var TeamController = function(router, services, admin) {
     }
   });
 
-    router.route('/teams/time').get(function(req, res) {
-
-    getTeamsWithdate().then(respond).catch(error);
-    
+  router.route('/teams/:time').get(function(req, res) {
+    var time = req.params.time;
+    getTeamsWithDatetime(time).then(respond).catch(error);
 
     function respond(teams) {
       res.status(200).json(teams);
@@ -89,7 +88,7 @@ var TeamController = function(router, services, admin) {
         //cache.addPair({key: "TEAMS", value: result})
         //cache.setValue({key: "TEAMS", value: []});
         cache.stop();
-        cache.loop(60*1000); // 60 * 1000ms = 60s = 1 minute
+        cache.loop(60 * 1000); // 60 * 1000ms = 60s = 1 minute
         res.status(200).json(result);
       });
     }
@@ -105,7 +104,7 @@ var TeamController = function(router, services, admin) {
     }
   });
 
-   function getTeamsWithdate() {
+  function getTeamsWithDatetime(time) {
     return teamService.findAll().then(addDistances);
     function addDistances(teams) {
       if (teams.length < 1) {
@@ -113,11 +112,13 @@ var TeamController = function(router, services, admin) {
       }
       var promises = [];
       for (var i = 0; i < teams.length; i++) {
-        promises.push(routeService.addDistanceToTeam(teams[i].toObject()));
+        promises.push(
+          routeService.addDistanceToTeam(teams[i].toObject(), time)
+        );
       }
       return Q.all(promises);
     }
-  };
+  }
 
   function getTeams() {
     return teamService.findAll().then(addDistances);

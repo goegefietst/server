@@ -1,11 +1,11 @@
 var Q = require('q');
 
-var RouteService = function (model, util) {
+var RouteService = function(model, util) {
   this.model = model;
   this.util = util;
 };
 
-RouteService.prototype.save = function (route) {
+RouteService.prototype.save = function(route) {
   if (!route || !route.uuid || !route.points || !route.teams) {
     return Q.reject({
       status: 400,
@@ -22,19 +22,19 @@ RouteService.prototype.save = function (route) {
   });
 };
 
-RouteService.prototype.findByUserId = function (uuid) {
+RouteService.prototype.findByUserId = function(uuid) {
   if (!uuid) {
     return Q.reject({
       status: 400,
       message: 'String \'uuid\' required to find route by user'
     });
   }
-  return this.model.find({ 'uuid': uuid })
-    .select({ uuid: 1, points: 1, distance: 1, time: 1, teams: 1, _id: 0 })
+  return this.model.find({'uuid': uuid})
+    .select({uuid: 1, points: 1, distance: 1, time: 1, teams: 1, _id: 0})
     .exec();
 };
 
-RouteService.prototype.findByTeam = function (team) {
+RouteService.prototype.findByTeam = function(team) {
   if (!team || !team.name) {
     return Q.reject({
       status: 400,
@@ -42,13 +42,12 @@ RouteService.prototype.findByTeam = function (team) {
       ' to find route by team'
     });
   }
-  return this.model.find({ $match: { teams: { $elemMatch: { name: team.name } } } })
-    .select({ uuid: 1, points: 1, distance: 1, time: 1, teams: 1, _id: 0 })
+  return this.model.find({$match: {teams: {$elemMatch: {name: team.name}}}})
+    .select({uuid: 1, points: 1, distance: 1, time: 1, teams: 1, _id: 0})
     .exec();
 };
 
-RouteService.prototype.addDistanceToTeam = function (team) {
-  //team.fromDate = fromDate;
+RouteService.prototype.addDistanceToTeam = function(team, time) {
   if (!team || !team.name) {
     return Q.reject({
       status: 400,
@@ -57,16 +56,27 @@ RouteService.prototype.addDistanceToTeam = function (team) {
     });
   }
   var deferred = Q.defer();
-  var pipeline = [
+  var pipelineNoTime = [
     {
       $match: {
-        teams: { $elemMatch: { name: team.name }},
-        
-      }},
-    { $group: { _id: '', distance: { $sum: '$distance' } } },
-    { $project: { _id: 0, distance: '$distance' } }
+        teams: {$elemMatch: {name: team.name}},
+
+      }
+    },
+    {$group: {_id: '', distance: {$sum: '$distance'}}},
+    {$project: {_id: 0, distance: '$distance'}}
   ];
-  var wrap = function (err, res) {
+  var pipelineWithTime = [
+    {
+      $match: {
+        teams: {$elemMatch: {name: team.name}},
+        points: {$elemMatch: {time: {'$gte': time}}}
+      }
+    },
+    {$group: {_id: '', distance: {$sum: '$distance'}}},
+    {$project: {_id: 0, distance: '$distance'}}
+  ];
+  var wrap = function(err, res) {
     if (err) {
       deferred.reject(err);
     }
@@ -79,14 +89,18 @@ RouteService.prototype.addDistanceToTeam = function (team) {
       deferred.resolve(team);
     }
   };
-  this.model.aggregate(pipeline, wrap);
+  if (time) {
+    this.model.aggregate(pipelineWithTime, wrap);
+  } else {
+    this.model.aggregate(pipelineNoTime, wrap);
+  }
   return deferred.promise;
 };
 
-RouteService.prototype.validate = function (route) {
+RouteService.prototype.validate = function(route) {
   var doc = this.model(route);
   var deferred = Q.defer();
-  doc.validate(function (err) {
+  doc.validate(function(err) {
     if (!err) {
       deferred.resolve(doc.toObject());
     } else {
@@ -104,7 +118,7 @@ function distancePoints(points) {
   if (points.length < 2) {
     return 0;
   }
-  points.sort(function (a, b) {
+  points.sort(function(a, b) {
     return a.time - b.time;
   });
   var distance = 0;
