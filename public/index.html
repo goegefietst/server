@@ -109,11 +109,11 @@
 					<thead>
 					  <tr>
 						<th>Verenigingen</th>
-						<th style="text-align: center; width: 100;">Afstand</th>
+						<th style="text-align: center; width: 100px;">Afstand</th>
 					  </tr>
 					</thead>
 					<tbody>
-					  <tr ng-repeat="data in Scoreboard | orderBy : '-distance' | limitTo : 15 | filter : 'Faculty'">
+					  <tr ng-repeat="data in Scoreboard | orderBy : '-distance' | limitTo : 15 | filter : 'Association'">
 						<th>{{data.name}}</th>
 						<td>{{data.distance | number:2}} km</td>
 					  </tr>
@@ -128,11 +128,11 @@
 					<thead>
 					  <tr>
 						<th>Scholen</th>
-						<th style="text-align: center; width: 100;">Afstand</th>
+						<th style="text-align: center; width: 100px;">Afstand</th>
 					  </tr>
 					</thead>
 					<tbody>
-					  <tr ng-repeat="data in Scoreboard | orderBy : '-distance' | limitTo : 15 | filter : 'School'">
+					  <tr ng-repeat="data in Scoreboard | limitTo : 15 | filter : 'School' | orderBy : '-distance'">
 						<th>{{data.name}}</th>
 						<td>{{data.distance | number:2}} km</td>
 					  </tr>
@@ -151,7 +151,7 @@
 					  </tr>
 					</thead>
 					<tbody>
-					  <tr ng-repeat="data in Scoreboard | orderBy : '-distance' | limitTo : 15 | filter : 'Association'">
+					  <tr ng-repeat="data in Scoreboard | filter : 'Team' | orderBy : '-distance' | limitTo : 15">
 						<th>{{data.name}}</th>
 						<td>{{data.distance | number:2}} km</td>
 					  </tr>
