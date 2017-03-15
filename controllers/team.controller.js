@@ -85,6 +85,21 @@ var TeamController = function(router, services, admin) {
     }
   });
 
+   function getTeamsWithdate() {
+    return teamService.findAll().then(addDistances);
+    function addDistances(teams) {
+      if (teams.length < 1) {
+        return teams;
+      }
+      var promises = [];
+      for (var i = 0; i < teams.length; i++) {
+        promises.push(routeService.addDistanceToTeam(teams[i].toObject(), 5));
+      }
+      return Q.all(promises);
+    }
+  }
+};
+
   function getTeams() {
     return teamService.findAll().then(addDistances);
     function addDistances(teams) {
