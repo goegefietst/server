@@ -4,10 +4,10 @@
       "name": "School"
     },
     {
-      "name": "Faculty"
+      "name": "Association"
     },
     {
-      "name": "Association"
+      "name": "Team"
     }
   ],
   "teams": [
@@ -30,58 +30,6 @@
     {
       "name": "LUCA",
       "category": "School"
-    },
-    {
-      "name": "Letteren en wijsbegeerte",
-      "category": "Faculty"
-    },
-    {
-      "name": "Wetenschappen",
-      "category": "Faculty"
-    },
-    {
-      "name": "Geneeskunde & gezondheidswetenschappen",
-      "category": "Faculty"
-    },
-    {
-      "name": "Economie en Bedrijfskunde ",
-      "category": "Faculty"
-    },
-    {
-      "name": "Farmaceustische wetenschappen ",
-      "category": "Faculty"
-    },
-    {
-      "name": "Psychologie & pedagogische wetenschappen",
-      "category": "Faculty"
-    },
-    {
-      "name": "Dierengeneeskunde ",
-      "category": "Faculty"
-    },
-    {
-      "name": "Rechtsgeleerdheid",
-      "category": "Faculty"
-    },
-    {
-      "name": "Politieke & sociale wetenschappen ",
-      "category": "Faculty"
-    },
-    {
-      "name": "Bedrijf en organisatie",
-      "category": "Faculty"
-    },
-    {
-      "name": "Bio-ingenieurswetenschappen",
-      "category": "Faculty"
-    },
-    {
-      "name": "Geologie",
-      "category": "Faculty"
-    },
-    {
-      "name": "Ingenieurswetenschappen en Architectuur",
-      "category": "Faculty"
     },
     {
       "name": "Abnormalia",
